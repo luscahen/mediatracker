@@ -1,20 +1,4 @@
 {
   "categories": [],
-  "items": [
-    {
-      "id": "mqft6jbm4ixttzjvfuc",
-      "title": "a",
-      "author": "",
-      "year": "",
-      "genre": "",
-      "desc": "",
-      "notes": "",
-      "progress": 0,
-      "categoryId": null,
-      "status": "planned",
-      "rating": 0,
-      "cover": null,
-      "dateAdded": "2026-06-15T22:52:37.330Z"
-    }
-  ]
+  "items": []
 }
