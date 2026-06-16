@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ── Reset & CSS Variables (from Figma theme.css) ────────────────── */
+/* ── Reset & CSS Variables ────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
   --bg:           #0d0d16;
@@ -45,20 +45,24 @@ a { color: inherit; text-decoration: none; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-/* ── Login ──────────────────────────────────────────────────────── */
-#loginScreen {
+/* ════════════════════════════════════════════════════════════════════
+   LOGIN / PROFILE SCREENS
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared login shell ─────────────────────────────────────────── */
+.login-screen {
   position: fixed; inset: 0; background: var(--bg);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 16px; z-index: 1000; padding: 40px;
+  gap: 14px; z-index: 1000; padding: 40px 24px;
 }
 .login-logo {
   width: 52px; height: 52px; border-radius: 16px;
   background: linear-gradient(135deg, #7c6aff, #b38aff);
   display: flex; align-items: center; justify-content: center;
-  font-size: 24px; margin-bottom: 8px;
+  font-size: 24px; margin-bottom: 4px;
 }
 .login-title { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--foreground); }
-.login-sub { font-size: 13px; color: var(--muted); text-align: center; line-height: 1.5; }
+.login-sub { font-size: 13px; color: var(--muted); text-align: center; line-height: 1.5; max-width: 300px; }
 .login-input {
   width: 100%; max-width: 320px; padding: 13px 16px;
   border-radius: var(--radius); border: 1px solid var(--border);
@@ -70,10 +74,65 @@ a { color: inherit; text-decoration: none; }
   border-radius: var(--radius); background: linear-gradient(135deg, #7c6aff, #9b8aff);
   color: white; font-size: 15px; font-weight: 600; font-family: var(--font-display);
 }
-.login-hint { font-size: 11px; color: var(--muted); text-align: center; font-family: var(--font-mono); }
+.login-hint { font-size: 11px; color: var(--muted); text-align: center; font-family: var(--font-mono); max-width: 300px; line-height: 1.6; }
 .login-error { color: var(--danger); font-size: 12px; display: none; font-family: var(--font-mono); }
+.login-link {
+  font-size: 12px; color: var(--muted); font-family: var(--font-mono);
+  cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+}
+.login-link:hover { color: var(--foreground); }
 
-/* ── App Shell ──────────────────────────────────────────────────── */
+/* ── Profile selector screen ────────────────────────────────────── */
+#profileSelectScreen { display: flex; }
+
+.profile-list {
+  width: 100%; max-width: 320px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.profile-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--card);
+  cursor: pointer; transition: border-color 0.15s;
+}
+.profile-card:hover { border-color: var(--primary-border); background: rgba(124,106,255,0.05); }
+.profile-card.last-used { border-color: var(--primary-border); background: var(--primary-soft); }
+.profile-avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #7c6aff, #b38aff);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 14px; font-weight: 700; color: white;
+}
+.profile-avatar.guest-avatar { background: linear-gradient(135deg, #555, #888); font-size: 18px; }
+.profile-name { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--foreground); }
+.profile-sub { font-size: 11px; color: var(--muted); font-family: var(--font-mono); margin-top: 1px; }
+.profile-chevron { margin-left: auto; font-size: 14px; color: rgba(122,117,158,0.35); }
+
+.profile-divider {
+  width: 100%; max-width: 320px;
+  display: flex; align-items: center; gap: 10px;
+  color: var(--muted); font-size: 11px; font-family: var(--font-mono);
+}
+.profile-divider::before, .profile-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ── Password screen ────────────────────────────────────────────── */
+#passwordScreen { display: none; }
+.pw-back-btn {
+  position: absolute; top: 52px; left: 24px;
+  color: var(--primary); font-size: 14px; font-weight: 500; cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+}
+@media (max-width: 480px) { .pw-back-btn { top: 48px; } }
+
+/* ── Create profile screen ──────────────────────────────────────── */
+#createProfileScreen { display: none; }
+
+/* ════════════════════════════════════════════════════════════════════
+   APP SHELL
+   ════════════════════════════════════════════════════════════════════ */
+
 #app { display: none; height: 100vh; width: 100vw; overflow: hidden; }
 #app.show { display: flex; }
 
@@ -139,17 +198,19 @@ a { color: inherit; text-decoration: none; }
 .progress-bar-track { height: 4px; border-radius: 99px; background: rgba(255,255,255,0.05); }
 .progress-bar-fill { height: 100%; border-radius: 99px; }
 
+/* ── Sidebar user section ───────────────────────────────────────── */
 .sidebar-user {
   padding: 14px 16px; border-top: 1px solid var(--border);
-  display: flex; align-items: center; gap: 10px;
-  cursor: pointer; border-radius: 0;
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
 }
 .sidebar-user:hover { background: var(--surface); }
 .user-avatar {
   width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-  background: linear-gradient(135deg, #ff6b35, #ff8f6b);
-  display: flex; align-items: center; justify-content: center; font-size: 13px; color: white;
+  background: linear-gradient(135deg, #7c6aff, #b38aff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white; font-family: var(--font-display);
 }
+.user-avatar.guest { background: linear-gradient(135deg, #555, #888); font-size: 16px; }
 .user-name { font-size: 12px; font-weight: 500; color: var(--foreground); font-family: var(--font-display); }
 .user-count { font-size: 10px; color: var(--muted); font-family: var(--font-mono); }
 .user-settings { margin-left: auto; font-size: 13px; color: rgba(122,117,158,0.4); }
@@ -193,13 +254,10 @@ a { color: inherit; text-decoration: none; }
 .view-toggle { display: flex; align-items: center; gap: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
 .view-btn { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--muted); }
 .view-btn.active { background: rgba(255,255,255,0.08); color: var(--foreground); }
-
-/* Sort button */
 .sort-btn {
   display: flex; align-items: center; gap: 5px; padding: 7px 12px;
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-  color: var(--muted); font-size: 11px; font-family: var(--font-mono);
-  white-space: nowrap;
+  color: var(--muted); font-size: 11px; font-family: var(--font-mono); white-space: nowrap;
 }
 .sort-btn:hover { color: var(--foreground); }
 
@@ -264,7 +322,6 @@ a { color: inherit; text-decoration: none; }
 .media-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
 @media (min-width: 769px) { .media-grid { gap: 20px; } }
 
-/* Card */
 .media-card { cursor: pointer; display: flex; flex-direction: column; }
 .card-cover {
   width: 100%; aspect-ratio: 2/3; border-radius: var(--radius);
@@ -274,8 +331,7 @@ a { color: inherit; text-decoration: none; }
 .card-cover img { width: 100%; height: 100%; object-fit: cover; }
 .card-placeholder {
   width: 100%; height: 100%; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 6px;
-  background: var(--card);
+  align-items: center; justify-content: center; gap: 6px; background: var(--card);
 }
 .card-placeholder-icon { font-size: 20px; opacity: 0.2; }
 .card-placeholder-text { font-size: 9px; color: var(--muted); text-align: center; padding: 0 6px; line-height: 1.4; font-family: var(--font-mono); }
@@ -312,11 +368,8 @@ a { color: inherit; text-decoration: none; }
 .card-genre-tag {
   display: inline-block; font-size: 9px; font-family: var(--font-mono);
   text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted);
-  background: var(--surface); padding: 2px 6px; border-radius: 99px;
-  margin-top: 3px;
+  background: var(--surface); padding: 2px 6px; border-radius: 99px; margin-top: 3px;
 }
-.card-progress { width: 100%; height: 3px; border-radius: 99px; background: rgba(255,255,255,0.05); margin-top: 5px; overflow: hidden; }
-.card-progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #7c6aff, #b38aff); }
 
 /* List view */
 .media-list { display: flex; flex-direction: column; gap: 6px; }
@@ -335,8 +388,6 @@ a { color: inherit; text-decoration: none; }
 .list-info { flex: 1; min-width: 0; }
 .list-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list-meta { font-size: 11px; color: var(--muted); font-family: var(--font-mono); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.list-progress { width: 100%; height: 3px; background: rgba(255,255,255,0.05); border-radius: 99px; margin-top: 5px; overflow: hidden; }
-.list-progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #7c6aff, #b38aff); }
 .list-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
 .list-stars { display: flex; gap: 2px; font-size: 10px; }
 .list-chevron { font-size: 12px; color: rgba(122,117,158,0.3); }
@@ -381,10 +432,7 @@ a { color: inherit; text-decoration: none; }
 .stats-main-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
 /* ── Overlay & Drawer ───────────────────────────────────────────── */
-.overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6); z-index: 200;
-}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; }
 .overlay.show { display: block; }
 #mobileDrawer {
   position: fixed; top: 0; left: 0; height: 100%; width: 280px;
@@ -415,10 +463,7 @@ a { color: inherit; text-decoration: none; }
   min-width: 200px; z-index: 50; display: none;
 }
 .sort-dropdown.show { display: block; }
-.sort-option {
-  width: 100%; text-align: left; padding: 9px 12px;
-  font-size: 13px; color: var(--muted); border-radius: 8px;
-}
+.sort-option { width: 100%; text-align: left; padding: 9px 12px; font-size: 13px; color: var(--muted); border-radius: 8px; }
 .sort-option:hover { background: var(--surface); color: var(--foreground); }
 .sort-option.active { color: #b38aff; background: var(--primary-soft); }
 .sort-wrap { position: relative; }
@@ -429,19 +474,14 @@ a { color: inherit; text-decoration: none; }
   background: rgba(0,0,0,0.72); z-index: 300;
   align-items: flex-end; justify-content: center;
 }
-@media (min-width: 769px) {
-  .modal-backdrop { align-items: center; }
-}
+@media (min-width: 769px) { .modal-backdrop { align-items: center; } }
 .modal-backdrop.show { display: flex; }
 .modal {
   background: var(--card); border-radius: 20px 20px 0 0;
   width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto;
-  padding: 8px 20px 40px;
-  border: 1px solid var(--border); border-bottom: none;
+  padding: 8px 20px 40px; border: 1px solid var(--border); border-bottom: none;
 }
-@media (min-width: 769px) {
-  .modal { border-radius: 20px; border: 1px solid var(--border); max-height: 88vh; }
-}
+@media (min-width: 769px) { .modal { border-radius: 20px; border: 1px solid var(--border); max-height: 88vh; } }
 .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 99px; margin: 10px auto 14px; }
 @media (min-width: 769px) { .modal-handle { display: none; } }
 .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
@@ -449,12 +489,10 @@ a { color: inherit; text-decoration: none; }
 .modal-close { width: 28px; height: 28px; border-radius: 8px; background: var(--surface); font-size: 14px; color: var(--muted); display: flex; align-items: center; justify-content: center; }
 .modal-close:hover { color: var(--foreground); }
 
-/* Form fields */
 .field { margin-bottom: 14px; }
 .field-label {
   display: block; font-size: 9px; font-family: var(--font-mono);
-  text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
-  margin-bottom: 6px;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px;
 }
 .field input, .field textarea, .field select {
   width: 100%; padding: 10px 12px;
@@ -467,21 +505,16 @@ a { color: inherit; text-decoration: none; }
 .field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* Cover upload */
 .cover-upload-area {
   width: 100%; border: 2px dashed var(--border); border-radius: var(--radius);
   padding: 20px; text-align: center; cursor: pointer; color: var(--muted);
   font-size: 13px; line-height: 1.6; position: relative; overflow: hidden;
 }
 .cover-upload-area:hover { border-color: rgba(124,106,255,0.4); }
-.cover-upload-area img.cover-preview {
-  width: 100px; height: 150px; object-fit: cover; border-radius: 10px;
-  display: block; margin: 0 auto 8px;
-}
+.cover-upload-area img.cover-preview { width: 100px; height: 150px; object-fit: cover; border-radius: 10px; display: block; margin: 0 auto 8px; }
 .cover-upload-icon { font-size: 24px; opacity: 0.3; margin-bottom: 6px; }
 .cover-upload-hint { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
 
-/* Status pills */
 .status-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .status-pill-btn {
   padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 500;
@@ -492,12 +525,10 @@ a { color: inherit; text-decoration: none; }
 .status-pill-btn.selected[data-s="in-progress"] { background: rgba(124,106,255,0.12); color: #b38aff; border-color: rgba(124,106,255,0.3); }
 .status-pill-btn.selected[data-s="planned"] { background: rgba(122,117,158,0.12); color: var(--muted); border-color: rgba(122,117,158,0.3); }
 
-/* Star rating input */
 .star-input { display: flex; gap: 6px; }
 .star-input-btn { font-size: 26px; color: #333; padding: 0; }
 .star-input-btn.lit { color: var(--accent); }
 
-/* Modal actions */
 .modal-actions { display: flex; gap: 8px; margin-top: 20px; }
 .btn-cancel { flex: 1; padding: 13px; border-radius: var(--radius); background: var(--surface); color: var(--muted); font-size: 14px; font-weight: 500; }
 .btn-cancel:hover { color: var(--foreground); }
@@ -505,7 +536,6 @@ a { color: inherit; text-decoration: none; }
 .btn-delete { width: 100%; padding: 13px; border-radius: var(--radius); background: rgba(229,77,106,0.1); color: var(--danger); font-size: 14px; font-weight: 500; margin-top: 8px; }
 .btn-delete:hover { background: rgba(229,77,106,0.18); }
 
-/* Icon picker */
 .icon-picker { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .icon-option {
   display: flex; flex-direction: column; align-items: center; gap: 5px;
@@ -519,14 +549,12 @@ a { color: inherit; text-decoration: none; }
 /* ── Detail screen ──────────────────────────────────────────────── */
 #detailScreen {
   display: none; position: fixed; inset: 0;
-  background: var(--bg); z-index: 220;
-  flex-direction: column; overflow: hidden;
+  background: var(--bg); z-index: 220; flex-direction: column; overflow: hidden;
 }
 #detailScreen.show { display: flex; }
 .detail-header {
   flex-shrink: 0; display: flex; align-items: center; gap: 10px;
-  padding: 52px 16px 12px; border-bottom: 1px solid var(--border);
-  background: var(--bg);
+  padding: 52px 16px 12px; border-bottom: 1px solid var(--border); background: var(--bg);
 }
 @media (min-width: 769px) { .detail-header { padding: 20px 28px 14px; } }
 .back-btn { display: flex; align-items: center; gap: 5px; color: var(--primary); font-size: 14px; font-weight: 500; }
@@ -550,10 +578,7 @@ a { color: inherit; text-decoration: none; }
 .detail-status-chip { display: inline-flex; }
 
 /* ── Settings screen ────────────────────────────────────────────── */
-#settingsScreen {
-  display: none; position: fixed; inset: 0;
-  background: var(--bg); z-index: 220; flex-direction: column;
-}
+#settingsScreen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 220; flex-direction: column; }
 #settingsScreen.show { display: flex; }
 .settings-body { flex: 1; overflow-y: auto; padding: 20px; }
 @media (min-width: 769px) { .settings-body { padding: 28px 32px; max-width: 600px; } }
@@ -565,6 +590,8 @@ a { color: inherit; text-decoration: none; }
 .settings-row-sub { font-size: 11px; color: var(--muted); margin-top: 1px; font-family: var(--font-mono); }
 .settings-action-btn { padding: 7px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--muted); }
 .settings-action-btn:hover { color: var(--foreground); }
+.settings-action-btn.danger { color: var(--danger); border-color: rgba(229,77,106,0.3); background: rgba(229,77,106,0.08); }
+.settings-action-btn.danger:hover { background: rgba(229,77,106,0.15); }
 .color-swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .color-swatch { height: 48px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; font-size: 16px; }
 .color-swatch.selected { border-color: var(--primary); }
@@ -586,38 +613,89 @@ a { color: inherit; text-decoration: none; }
 #saveStatus.saved { color: #34d399; }
 #saveStatus.error { color: var(--danger); }
 
-/* ── Size picker (grid cols on mobile) ──────────────────────────── */
+/* ── Size picker ────────────────────────────────────────────────── */
 .size-dropdown {
   position: absolute; top: calc(100% + 6px); right: 0;
   background: var(--popover); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 6px;
-  min-width: 140px; z-index: 50; display: none;
+  border-radius: var(--radius); padding: 6px; min-width: 140px; z-index: 50; display: none;
 }
 .size-dropdown.show { display: block; }
-.size-option {
-  width: 100%; text-align: left; padding: 9px 12px;
-  font-size: 13px; color: var(--muted); border-radius: 8px;
-}
+.size-option { width: 100%; text-align: left; padding: 9px 12px; font-size: 13px; color: var(--muted); border-radius: 8px; }
 .size-option:hover { background: var(--surface); color: var(--foreground); }
 .size-option.active { color: #b38aff; background: var(--primary-soft); }
 .size-wrap { position: relative; }
+
+/* ── Guest banner ───────────────────────────────────────────────── */
+.guest-banner {
+  background: rgba(255,107,53,0.1); border-bottom: 1px solid rgba(255,107,53,0.2);
+  padding: 6px 16px; font-size: 11px; font-family: var(--font-mono);
+  color: #ff6b35; text-align: center; flex-shrink: 0;
+}
 </style>
 </head>
 <body>
 
-<!-- ── LOGIN ──────────────────────────────────────────────────────── -->
-<div id="loginScreen">
+<!-- ════════════════════════════════════════════════════════════════════
+     PROFILE SELECT SCREEN
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="login-screen" id="profileSelectScreen">
   <div class="login-logo">📚</div>
   <div class="login-title">Media Tracker</div>
-  <div class="login-sub">Enter your password to access your collection</div>
+  <div class="login-sub">Who's watching?</div>
+
+  <div class="profile-list" id="profileList">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="profile-divider" style="margin-top:4px;">or</div>
+
+  <button class="login-btn" style="background:var(--surface);border:1px solid var(--border);color:var(--foreground);font-size:14px;" onclick="showCreateProfile()">＋ Create new profile</button>
+
+  <button class="login-btn" style="background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--muted);font-size:13px;" onclick="loginAsGuest()">
+    👤 Continue as Guest
+  </button>
+
+  <button class="login-link" style="margin-top:8px;" onclick="confirmResetDevice()">Reset this device</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     PASSWORD SCREEN
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="login-screen" id="passwordScreen" style="display:none; position:fixed;">
+  <button class="pw-back-btn" onclick="backToProfiles()">← Back</button>
+  <div class="login-logo">📚</div>
+  <div class="login-title" id="pwScreenName">Profile</div>
+  <div class="login-sub" id="pwScreenSub">Enter your password to continue</div>
   <input class="login-input" type="password" id="pwInput" placeholder="Password" autocomplete="current-password">
   <div class="login-error" id="loginError">Wrong password. Try again.</div>
   <button class="login-btn" onclick="tryLogin()">Unlock</button>
-  <div class="login-hint">First time? Any password you type becomes your password on this device.</div>
+  <div class="login-hint" id="pwHint"></div>
 </div>
 
-<!-- ── APP ────────────────────────────────────────────────────────── -->
+<!-- ════════════════════════════════════════════════════════════════════
+     CREATE PROFILE SCREEN
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="login-screen" id="createProfileScreen" style="display:none; position:fixed;">
+  <button class="pw-back-btn" onclick="backToProfiles()">← Back</button>
+  <div class="login-logo">📚</div>
+  <div class="login-title">New Profile</div>
+  <div class="login-sub">Choose a name and set a password for this profile.</div>
+  <input class="login-input" type="text" id="newProfileName" placeholder="Your name" maxlength="32" autocomplete="off">
+  <input class="login-input" type="password" id="newProfilePw" placeholder="Password" autocomplete="new-password">
+  <input class="login-input" type="password" id="newProfilePwConfirm" placeholder="Confirm password" autocomplete="new-password">
+  <div class="login-error" id="createProfileError">Passwords don't match.</div>
+  <button class="login-btn" onclick="createProfile()">Create Profile</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     APP
+     ════════════════════════════════════════════════════════════════════ -->
 <div id="app">
+
+  <!-- Guest mode banner -->
+  <div id="guestBanner" class="guest-banner" style="display:none;">
+    👤 Guest session — changes are not saved to GitHub
+  </div>
 
   <!-- Desktop sidebar -->
   <aside id="sidebar">
@@ -645,9 +723,9 @@ a { color: inherit; text-decoration: none; }
       <div class="sidebar-progress" id="desktopProgress"></div>
     </nav>
     <div class="sidebar-user" onclick="openSettings()">
-      <div class="user-avatar">L</div>
+      <div class="user-avatar" id="sidebarAvatar">?</div>
       <div>
-        <div class="user-name">Lucas Henrique</div>
+        <div class="user-name" id="sidebarName">—</div>
         <div class="user-count" id="userItemCount">0 items</div>
       </div>
       <div class="user-settings">⚙</div>
@@ -656,7 +734,6 @@ a { color: inherit; text-decoration: none; }
 
   <!-- Main -->
   <main id="main">
-
     <!-- Mobile header -->
     <div id="mobileHeader">
       <div class="mh-top">
@@ -738,7 +815,6 @@ a { color: inherit; text-decoration: none; }
     <div id="contentArea">
       <div id="gridContainer"></div>
     </div>
-
   </main>
 </div>
 
@@ -773,9 +849,9 @@ a { color: inherit; text-decoration: none; }
     <div class="drawer-progress sidebar-progress" id="drawerProgress" style="margin-top:20px; padding:0 12px;"></div>
   </nav>
   <div class="drawer-user" onclick="openSettings(); closeDrawer();">
-    <div class="user-avatar">L</div>
+    <div class="user-avatar" id="drawerAvatar">?</div>
     <div>
-      <div class="user-name">Lucas Henrique</div>
+      <div class="user-name" id="drawerName">—</div>
       <div class="user-count" id="drawerItemCount">0 items</div>
     </div>
     <div class="user-settings">⚙</div>
@@ -790,7 +866,6 @@ a { color: inherit; text-decoration: none; }
       <div class="modal-title" id="itemModalTitle">Add Item</div>
       <button class="modal-close" onclick="closeItemModal()">✕</button>
     </div>
-    <!-- Cover -->
     <div class="field">
       <label class="field-label">Cover Art</label>
       <div class="cover-upload-area" id="coverUploadArea" onclick="document.getElementById('coverFileInput').click()">
@@ -845,10 +920,7 @@ a { color: inherit; text-decoration: none; }
         <button class="star-input-btn" data-n="5" onclick="setRating(5)">★</button>
       </div>
     </div>
-    <div class="field">
-      <label class="field-label">Progress % (0–100)</label>
-      <input type="number" id="f_progress" placeholder="0" min="0" max="100">
-    </div>
+    <!-- Progress field intentionally removed -->
     <div class="field">
       <label class="field-label">Description</label>
       <textarea id="f_desc" placeholder="What's it about?"></textarea>
@@ -928,6 +1000,9 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div class="settings-section">
       <div class="settings-section-title">Change Password</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
+        Change the password for your current profile on this device.
+      </div>
       <input class="token-field" type="password" id="newPwInput" placeholder="New password...">
       <button class="save-token-btn" style="margin-top:8px;" onclick="changePassword()">Update Password</button>
     </div>
@@ -957,74 +1032,342 @@ a { color: inherit; text-decoration: none; }
 <div id="saveStatus"></div>
 
 <script>
-// ─── Config ───────────────────────────────────────────────────────────
-const GITHUB_USER = 'luscahen';
-const GITHUB_REPO = 'mediatracker';
-const DATA_FILE   = 'data.json';
+// ════════════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════════════
+const GITHUB_USER   = 'luscahen';
+const GITHUB_REPO   = 'mediatracker';
+const PROFILES_FILE = 'profiles.json';
+// Data file per profile: data-[profileId].json
 
-// ─── State ────────────────────────────────────────────────────────────
-let db = { categories: [], items: [] };
-let activeTab = 'all';
-let activeStatus = 'all';
-let activeSort = 'date';
-let activeView = 'grid';
-let gridCols = 3;
-let mobileSearchOpen = false;
-let editingItemId = null;
-let viewingItemId = null;
-let currentRating = 0;
-let currentStatus = 'planned';
-let currentCover = null;
-let selectedCatIcon = '🎬';
+// ════════════════════════════════════════════════════════════════════
+//  PROFILE STATE
+// ════════════════════════════════════════════════════════════════════
+// profiles.json shape: { profiles: [{ id, name }] }
+// localStorage keys:
+//   mt_profiles_cache          → cached profiles.json content
+//   mt_profiles_sha            → SHA of profiles.json
+//   mt_pw_[profileId]          → base64 password per profile
+//   mt_last_profile            → last used profile id
+//   mt_token                   → GitHub token (shared across profiles)
+//   mt_bg                      → background color
+//   mt_sha_[profileId]         → SHA of data-[profileId].json
+//   mt_cache_[profileId]       → cached data for profile
 
-// ─── Auth ─────────────────────────────────────────────────────────────
+let profilesData   = { profiles: [] }; // loaded from GitHub
+let currentProfile = null;             // { id, name } or { id:'guest', name:'Guest' }
+let pendingProfileId = null;           // profile waiting for password entry
+let isGuest = false;
+
+// ════════════════════════════════════════════════════════════════════
+//  PROFILE SCREEN LOGIC
+// ════════════════════════════════════════════════════════════════════
+
+async function initProfileScreen() {
+  // Try to load profiles from GitHub; fall back to cache
+  const token = getToken();
+  if (token) {
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${PROFILES_FILE}`,
+        { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+      );
+      if (res.ok) {
+        const json = await res.json();
+        profilesData = JSON.parse(atob(json.content.replace(/\n/g,'')));
+        localStorage.setItem('mt_profiles_sha', json.sha);
+        localStorage.setItem('mt_profiles_cache', JSON.stringify(profilesData));
+      } else { throw new Error(); }
+    } catch {
+      const c = localStorage.getItem('mt_profiles_cache');
+      if (c) profilesData = JSON.parse(c);
+    }
+  } else {
+    const c = localStorage.getItem('mt_profiles_cache');
+    if (c) profilesData = JSON.parse(c);
+  }
+  renderProfileList();
+}
+
+function renderProfileList() {
+  const lastId = localStorage.getItem('mt_last_profile');
+  const el = document.getElementById('profileList');
+  el.innerHTML = '';
+
+  if (!profilesData.profiles || profilesData.profiles.length === 0) {
+    el.innerHTML = `<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px 0;font-family:var(--font-mono);">No profiles yet. Create one below.</div>`;
+    return;
+  }
+
+  // Sort: last used first
+  const sorted = [...profilesData.profiles].sort((a,b) => {
+    if (a.id === lastId) return -1;
+    if (b.id === lastId) return 1;
+    return 0;
+  });
+
+  sorted.forEach(profile => {
+    const isLast = profile.id === lastId;
+    const initials = getInitials(profile.name);
+    const card = document.createElement('div');
+    card.className = 'profile-card' + (isLast ? ' last-used' : '');
+    card.innerHTML = `
+      <div class="profile-avatar">${initials}</div>
+      <div>
+        <div class="profile-name">${esc(profile.name)}</div>
+        <div class="profile-sub">${isLast ? 'Last used' : 'Profile'}</div>
+      </div>
+      <span class="profile-chevron">›</span>`;
+    card.addEventListener('click', () => selectProfile(profile));
+    el.appendChild(card);
+  });
+}
+
+function selectProfile(profile) {
+  pendingProfileId = profile.id;
+  const storedPw = localStorage.getItem(`mt_pw_${profile.id}`);
+
+  document.getElementById('pwScreenName').textContent = profile.name;
+  document.getElementById('pwInput').value = '';
+  document.getElementById('loginError').style.display = 'none';
+
+  if (!storedPw) {
+    // First time on this device — any password sets it
+    document.getElementById('pwScreenSub').textContent = 'Set a password for this device';
+    document.getElementById('pwHint').textContent = 'First time here? Any password you enter becomes your password on this device.';
+  } else {
+    document.getElementById('pwScreenSub').textContent = 'Enter your password to continue';
+    document.getElementById('pwHint').textContent = '';
+  }
+
+  showScreen('passwordScreen');
+}
+
 function tryLogin() {
   const pw = document.getElementById('pwInput').value;
   if (!pw) return;
-  const stored = localStorage.getItem('mt_pw');
-  if (!stored) { localStorage.setItem('mt_pw', btoa(pw)); loginSuccess(); }
-  else if (stored === btoa(pw)) { loginSuccess(); }
-  else { document.getElementById('loginError').style.display = 'block'; }
+  const storedPw = localStorage.getItem(`mt_pw_${pendingProfileId}`);
+  if (!storedPw) {
+    // First time — register password
+    localStorage.setItem(`mt_pw_${pendingProfileId}`, btoa(pw));
+    const profile = profilesData.profiles.find(p => p.id === pendingProfileId);
+    loginWithProfile(profile);
+  } else if (storedPw === btoa(pw)) {
+    const profile = profilesData.profiles.find(p => p.id === pendingProfileId);
+    loginWithProfile(profile);
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
 }
 document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
 
-function loginSuccess() {
-  document.getElementById('loginScreen').style.display = 'none';
+function loginWithProfile(profile) {
+  currentProfile = profile;
+  isGuest = false;
+  localStorage.setItem('mt_last_profile', profile.id);
+  bootApp();
+}
+
+function loginAsGuest() {
+  currentProfile = { id: 'guest', name: 'Guest' };
+  isGuest = true;
+  db = { categories: [], items: [] };
+  bootApp();
+}
+
+async function createProfile() {
+  const name    = document.getElementById('newProfileName').value.trim();
+  const pw      = document.getElementById('newProfilePw').value;
+  const pwConf  = document.getElementById('newProfilePwConfirm').value;
+  const errEl   = document.getElementById('createProfileError');
+
+  if (!name) { errEl.textContent = 'Please enter a name.'; errEl.style.display = 'block'; return; }
+  if (!pw)   { errEl.textContent = 'Please set a password.'; errEl.style.display = 'block'; return; }
+  if (pw !== pwConf) { errEl.textContent = "Passwords don't match."; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+
+  const id = uid();
+  const newProfile = { id, name };
+  if (!profilesData.profiles) profilesData.profiles = [];
+  profilesData.profiles.push(newProfile);
+
+  // Save password locally
+  localStorage.setItem(`mt_pw_${id}`, btoa(pw));
+
+  // Push profiles.json to GitHub
+  const token = getToken();
+  if (token) {
+    try {
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(profilesData, null, 2))));
+      const sha = localStorage.getItem('mt_profiles_sha') || '';
+      const res = await fetch(
+        `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${PROFILES_FILE}`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'add profile', content, sha })
+        }
+      );
+      if (res.ok) {
+        const json = await res.json();
+        localStorage.setItem('mt_profiles_sha', json.content.sha);
+      }
+    } catch(e) { /* continue anyway */ }
+  }
+  localStorage.setItem('mt_profiles_cache', JSON.stringify(profilesData));
+
+  // Create empty data file for this profile
+  if (token) {
+    try {
+      const emptyData = { categories: [], items: [] };
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(emptyData, null, 2))));
+      await fetch(
+        `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/data-${id}.json`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'init profile data', content, sha: '' })
+        }
+      );
+    } catch(e) { /* continue anyway */ }
+  }
+
+  loginWithProfile(newProfile);
+}
+
+function showCreateProfile() {
+  document.getElementById('newProfileName').value = '';
+  document.getElementById('newProfilePw').value = '';
+  document.getElementById('newProfilePwConfirm').value = '';
+  document.getElementById('createProfileError').style.display = 'none';
+  showScreen('createProfileScreen');
+}
+
+function backToProfiles() {
+  pendingProfileId = null;
+  showScreen('profileSelectScreen');
+  renderProfileList();
+}
+
+function showScreen(id) {
+  ['profileSelectScreen','passwordScreen','createProfileScreen'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? 'flex' : 'none';
+  });
+}
+
+function confirmResetDevice() {
+  if (!confirm('Reset this device?\n\nThis removes your saved passwords and cached data from this browser. Your GitHub data is NOT affected — you can always log back in.')) return;
+  // Clear all mt_ keys except token (user might want to keep it)
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('mt_') && k !== 'mt_token') keysToRemove.push(k);
+  }
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+  profilesData = { profiles: [] };
+  renderProfileList();
+  alert('Device reset. Your GitHub data is safe.');
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  APP BOOT
+// ════════════════════════════════════════════════════════════════════
+function bootApp() {
+  // Hide all login screens
+  ['profileSelectScreen','passwordScreen','createProfileScreen'].forEach(s => {
+    document.getElementById(s).style.display = 'none';
+  });
   document.getElementById('app').classList.add('show');
+
+  // Guest banner
+  document.getElementById('guestBanner').style.display = isGuest ? 'block' : 'none';
+
+  // Profile name in sidebar/drawer
+  updateProfileUI();
   applyBgColor();
-  loadFromGitHub(false);
+
+  if (isGuest) {
+    db = { categories: [], items: [] };
+    renderAll();
+  } else {
+    loadFromGitHub(false);
+  }
 }
 
-function changePassword() {
-  const pw = document.getElementById('newPwInput').value;
-  if (!pw) return alert('Enter a new password first.');
-  localStorage.setItem('mt_pw', btoa(pw));
-  document.getElementById('newPwInput').value = '';
-  alert('Password updated!');
+function updateProfileUI() {
+  const name = currentProfile ? currentProfile.name : '—';
+  const initials = currentProfile ? getInitials(currentProfile.name) : '?';
+  const isGuestMode = currentProfile && currentProfile.id === 'guest';
+
+  ['sidebarName','drawerName'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = name;
+  });
+  ['sidebarAvatar','drawerAvatar'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = isGuestMode ? '👤' : initials;
+      el.className = 'user-avatar' + (isGuestMode ? ' guest' : '');
+    }
+  });
 }
 
-// ─── GitHub API ───────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  CONFIG & STATE
+// ════════════════════════════════════════════════════════════════════
+const GITHUB_USER_C = GITHUB_USER;
+const GITHUB_REPO_C = GITHUB_REPO;
+
+function dataFile() {
+  if (!currentProfile || currentProfile.id === 'guest') return null;
+  return `data-${currentProfile.id}.json`;
+}
+
+let db = { categories: [], items: [] };
+let activeTab    = 'all';
+let activeStatus = 'all';
+let activeSort   = 'date';
+let activeView   = 'grid';
+let gridCols     = 3;
+let mobileSearchOpen = false;
+let editingItemId    = null;
+let viewingItemId    = null;
+let currentRating    = 0;
+let currentStatus    = 'planned';
+let currentCover     = null;
+let selectedCatIcon  = '🎬';
+
+// ════════════════════════════════════════════════════════════════════
+//  GITHUB API
+// ════════════════════════════════════════════════════════════════════
 function getToken() { return localStorage.getItem('mt_token') || ''; }
 
 async function loadFromGitHub(force = false) {
+  if (isGuest) { renderAll(); return; }
   const token = getToken();
+  const file  = dataFile();
+  if (!file) { renderAll(); return; }
   if (!token) { setStatus('⚠ Add your GitHub token in Settings', 'error'); renderAll(); return; }
   setStatus('Loading…', 'saving');
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${file}`,
       { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
     );
     if (res.ok) {
       const json = await res.json();
-      db = JSON.parse(atob(json.content.replace(/\n/g, '')));
-      localStorage.setItem('mt_sha', json.sha);
-      localStorage.setItem('mt_cache', JSON.stringify(db));
+      db = JSON.parse(atob(json.content.replace(/\n/g,'')));
+      localStorage.setItem(`mt_sha_${currentProfile.id}`, json.sha);
+      localStorage.setItem(`mt_cache_${currentProfile.id}`, JSON.stringify(db));
       setStatus('✓ Synced', 'saved');
       setTimeout(() => setStatus(''), 3000);
+    } else if (res.status === 404) {
+      // Profile data file doesn't exist yet — start fresh and create it
+      db = { categories: [], items: [] };
+      await saveToGitHub();
     } else { throw new Error('fetch failed'); }
-  } catch (e) {
-    const c = localStorage.getItem('mt_cache');
+  } catch(e) {
+    const c = localStorage.getItem(`mt_cache_${currentProfile.id}`);
     if (c) { db = JSON.parse(c); setStatus('Offline — showing cached data', 'error'); }
     else setStatus('Could not load data. Check token in Settings.', 'error');
   }
@@ -1032,24 +1375,27 @@ async function loadFromGitHub(force = false) {
 }
 
 async function saveToGitHub() {
+  if (isGuest) { setStatus('Guest session — not saving', 'error'); return; }
   const token = getToken();
+  const file  = dataFile();
+  if (!file) return;
   if (!token) { setStatus('⚠ No token — add in Settings', 'error'); return; }
   setStatus('Saving…', 'saving');
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2))));
-  const sha = localStorage.getItem('mt_sha') || '';
+  const sha = localStorage.getItem(`mt_sha_${currentProfile.id}`) || '';
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${file}`,
       {
         method: 'PUT',
         headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'update data', content, sha })
+        body: JSON.stringify({ message: `update data (${currentProfile.name})`, content, sha })
       }
     );
     const json = await res.json();
     if (res.ok) {
-      localStorage.setItem('mt_sha', json.content.sha);
-      localStorage.setItem('mt_cache', JSON.stringify(db));
+      localStorage.setItem(`mt_sha_${currentProfile.id}`, json.content.sha);
+      localStorage.setItem(`mt_cache_${currentProfile.id}`, JSON.stringify(db));
       setStatus('✓ Saved', 'saved');
       setTimeout(() => setStatus(''), 3000);
     } else {
@@ -1072,11 +1418,10 @@ function setStatus(msg, type='') {
   el.textContent = msg; el.className = type;
 }
 
-// ─── Render ───────────────────────────────────────────────────────────
-function renderAll() {
-  renderSidebar();
-  renderGrid();
-}
+// ════════════════════════════════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════════════════════════════════
+function renderAll() { renderSidebar(); renderGrid(); }
 
 function getSearchQuery() {
   if (window.innerWidth >= 769) return document.getElementById('desktopSearchInput').value.toLowerCase();
@@ -1086,7 +1431,7 @@ function getSearchQuery() {
 function getFilteredItems() {
   const q = getSearchQuery();
   return db.items.filter(it => {
-    const matchTab = activeTab === 'all' || activeTab === 'stats' ? true : it.categoryId === activeTab;
+    const matchTab    = activeTab === 'all' || activeTab === 'stats' ? true : it.categoryId === activeTab;
     const matchStatus = activeStatus === 'all' ? true : it.status === activeStatus;
     const matchSearch = !q || it.title.toLowerCase().includes(q) || (it.author||'').toLowerCase().includes(q) || (it.genre||'').toLowerCase().includes(q);
     return matchTab && matchStatus && matchSearch;
@@ -1118,7 +1463,6 @@ function renderSidebar() {
     db.categories.forEach(cat => {
       const count = db.items.filter(i => i.categoryId === cat.id).length;
       const isActive = activeTab === cat.id;
-      const clickExtra = isDrawer ? `closeDrawer();` : '';
       const btn = document.createElement('button');
       btn.className = 'nav-item' + (isActive ? ' active' : '');
       btn.dataset.tab = cat.id;
@@ -1136,13 +1480,11 @@ function renderSidebar() {
     });
   });
 
-  // stats nav active state
   document.querySelectorAll('[data-tab]').forEach(el => {
     const t = el.dataset.tab;
     if (t) el.classList.toggle('active', t === activeTab);
   });
 
-  // progress bars
   const completed = db.items.filter(i => i.status === 'completed').length;
   const inProgress = db.items.filter(i => i.status === 'in-progress').length;
   const progressHtml = total === 0 ? '' : `
@@ -1168,7 +1510,6 @@ function renderSidebar() {
 function renderGrid() {
   const container = document.getElementById('gridContainer');
 
-  // Update titles
   let title = 'All Media';
   if (activeTab === 'stats') title = 'Statistics';
   else if (activeTab !== 'all') { const cat = db.categories.find(c => c.id === activeTab); if (cat) title = cat.name; }
@@ -1189,18 +1530,17 @@ function renderGrid() {
     return;
   }
 
+  container.innerHTML = '';
   if (activeView === 'list') {
-    container.innerHTML = '';
     const list = document.createElement('div');
     list.className = 'media-list';
-    items.forEach(item => { list.appendChild(buildListItem(item)); });
+    items.forEach(item => list.appendChild(buildListItem(item)));
     container.appendChild(list);
   } else {
-    container.innerHTML = '';
     const grid = document.createElement('div');
     const cols = window.innerWidth < 769 ? Math.min(gridCols, 3) : gridCols;
     grid.className = `media-grid cols-${cols}`;
-    items.forEach(item => { grid.appendChild(buildCard(item)); });
+    items.forEach(item => grid.appendChild(buildCard(item)));
     container.appendChild(grid);
   }
 }
@@ -1216,22 +1556,15 @@ function buildCard(item) {
     ? `<div class="card-rating-badge"><span class="star-filled">★</span>${item.rating}</div>` : '';
   const statusChip = item.status !== 'planned'
     ? `<div class="card-status-badge"><span class="status-chip ${item.status}">${item.status === 'in-progress' ? 'Active' : 'Completed'}</span></div>` : '';
-  const progressHtml = (item.progress > 0 && item.progress < 100)
-    ? `<div class="card-progress"><div class="card-progress-fill" style="width:${item.progress}%"></div></div>` : '';
   const genreTag = item.genre ? `<div class="card-genre-tag">${esc(item.genre.split(',')[0].trim())}</div>` : '';
-  const meta = item.author || item.year || '';
+  const meta = [item.author, item.year].filter(Boolean).join(' · ');
 
   div.innerHTML = `
-    <div class="card-cover">
-      ${coverHtml}
-      ${ratingBadge}
-      ${statusChip}
-    </div>
+    <div class="card-cover">${coverHtml}${ratingBadge}${statusChip}</div>
     <div class="card-info">
       <div class="card-title">${esc(item.title)}</div>
       ${meta ? `<div class="card-meta">${esc(meta)}</div>` : ''}
       ${genreTag}
-      ${progressHtml}
     </div>`;
   return div;
 }
@@ -1245,15 +1578,12 @@ function buildListItem(item) {
     : `<div class="list-thumb-placeholder">📄</div>`;
   const stars = item.rating ? starsHtml(item.rating, 10) : `<span style="font-size:10px;font-family:var(--font-mono);color:var(--muted);">—</span>`;
   const meta = [item.author, item.year].filter(Boolean).join(' · ');
-  const progressHtml = (item.progress > 0 && item.progress < 100)
-    ? `<div class="list-progress"><div class="list-progress-fill" style="width:${item.progress}%"></div></div>` : '';
 
   div.innerHTML = `
     <div class="list-thumb">${thumbHtml}</div>
     <div class="list-info">
       <div class="list-title">${esc(item.title)}</div>
       ${meta ? `<div class="list-meta">${esc(meta)}</div>` : ''}
-      ${progressHtml}
     </div>
     <div class="list-right">
       <div class="list-stars">${stars}</div>
@@ -1274,9 +1604,9 @@ function renderStats(container) {
   db.categories.forEach(cat => {
     const catItems = db.items.filter(i => i.categoryId === cat.id);
     if (!catItems.length) return;
-    const c = catItems.filter(i => i.status==='completed').length;
-    const p = catItems.filter(i => i.status==='in-progress').length;
-    const pl= catItems.filter(i => i.status==='planned').length;
+    const c  = catItems.filter(i => i.status==='completed').length;
+    const p  = catItems.filter(i => i.status==='in-progress').length;
+    const pl = catItems.filter(i => i.status==='planned').length;
     catStatsHtml += `
       <div class="stats-type-card">
         <div class="stats-type-header">
@@ -1313,28 +1643,26 @@ function renderStats(container) {
       <div class="stat-card"><div class="stat-label">Total Items</div><div class="stat-value" style="color:#7c6aff;">${total}</div></div>
       <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value" style="color:#34d399;">${completed}</div></div>
       <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-value" style="color:#b38aff;">${inProg}</div></div>
-      <div class="stat-card"><div class="stat-label">Avg Rating</div><div class="stat-value" style="color:#ff6b35;">${avg} ${avg !== '—' ? '★' : ''}</div></div>
+      <div class="stat-card"><div class="stat-label">Avg Rating</div><div class="stat-value" style="color:#ff6b35;">${avg}${avg !== '—' ? ' ★' : ''}</div></div>
     </div>
     ${db.categories.length ? `<div class="stats-section-title">By Category</div><div class="stats-type-grid">${catStatsHtml}</div>` : ''}
     ${topRated.length ? `<div class="stats-section-title">Top Rated ★★★★★</div>${topRatedHtml}` : ''}
   `;
 }
 
-// ─── Navigation ───────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════════════════════════
 function selectTab(tab) {
   activeTab = tab;
-  document.querySelectorAll('[data-tab]').forEach(el => {
-    el.classList.toggle('active', el.dataset.tab === tab);
-  });
+  document.querySelectorAll('[data-tab]').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
   document.getElementById('mobileHeader').style.display = tab === 'stats' ? 'none' : '';
   renderGrid();
 }
 
 function selectStatus(el, status) {
   activeStatus = status;
-  document.querySelectorAll('.filter-pill, .mh-filter-pill').forEach(p => {
-    p.classList.toggle('active', p.dataset.status === status);
-  });
+  document.querySelectorAll('.filter-pill, .mh-filter-pill').forEach(p => p.classList.toggle('active', p.dataset.status === status));
   renderGrid();
 }
 
@@ -1349,29 +1677,25 @@ function setGridCols(n) {
   gridCols = n;
   document.getElementById('sizeBtnLabel').textContent = n + '×';
   document.querySelectorAll('.size-option').forEach(o => o.classList.toggle('active', parseInt(o.dataset.cols) === n));
-  closeSizeMenu();
-  renderGrid();
+  closeSizeMenu(); renderGrid();
 }
 
 function selectSort(key, label) {
   activeSort = key;
   document.getElementById('sortBtnLabel').textContent = label;
   document.querySelectorAll('.sort-option').forEach(o => o.classList.toggle('active', o.dataset.sort === key));
-  closeSortMenu();
-  renderGrid();
+  closeSortMenu(); renderGrid();
 }
 
-// ─── Drawer / Panel ───────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  DRAWER / PANEL
+// ════════════════════════════════════════════════════════════════════
 function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
 function closeDrawer() { document.getElementById('mobileDrawer').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
-
-// ─── Sort / Size menus ────────────────────────────────────────────────
 function toggleSortMenu() { document.getElementById('sortDropdown').classList.toggle('show'); document.getElementById('sizeDropdown').classList.remove('show'); document.getElementById('overlay').classList.toggle('show', document.getElementById('sortDropdown').classList.contains('show')); }
 function closeSortMenu() { document.getElementById('sortDropdown').classList.remove('show'); if (!document.getElementById('mobileDrawer').classList.contains('open')) document.getElementById('overlay').classList.remove('show'); }
 function toggleSizeMenu() { document.getElementById('sizeDropdown').classList.toggle('show'); document.getElementById('sortDropdown').classList.remove('show'); document.getElementById('overlay').classList.toggle('show', document.getElementById('sizeDropdown').classList.contains('show')); }
 function closeSizeMenu() { document.getElementById('sizeDropdown').classList.remove('show'); if (!document.getElementById('mobileDrawer').classList.contains('open')) document.getElementById('overlay').classList.remove('show'); }
-
-// ─── Mobile search ────────────────────────────────────────────────────
 function toggleMobileSearch() {
   mobileSearchOpen = !mobileSearchOpen;
   document.getElementById('mobileSearchBar').style.display = mobileSearchOpen ? 'block' : 'none';
@@ -1380,7 +1704,9 @@ function toggleMobileSearch() {
   else document.getElementById('mobileSearchInput').focus();
 }
 
-// ─── Category ─────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  CATEGORY
+// ════════════════════════════════════════════════════════════════════
 function openCategoryModal() { document.getElementById('catNameInput').value = ''; document.querySelector('.icon-option').classList.add('selected'); document.getElementById('categoryModal').classList.add('show'); }
 function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('show'); }
 function selectIcon(el) { document.querySelectorAll('.icon-option').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); selectedCatIcon = el.dataset.icon; }
@@ -1388,27 +1714,25 @@ function saveCategory() {
   const name = document.getElementById('catNameInput').value.trim();
   if (!name) return;
   db.categories.push({ id: uid(), name, icon: selectedCatIcon });
-  closeCategoryModal();
-  saveToGitHub();
-  renderAll();
+  closeCategoryModal(); saveToGitHub(); renderAll();
 }
 function deleteCategory(id) {
   if (!confirm('Delete this category? Items in it will become uncategorized.')) return;
   db.categories = db.categories.filter(c => c.id !== id);
   db.items.forEach(i => { if (i.categoryId === id) i.categoryId = null; });
   if (activeTab === id) activeTab = 'all';
-  saveToGitHub();
-  renderAll();
+  saveToGitHub(); renderAll();
 }
 
-// ─── Add / Edit Item ──────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  ADD / EDIT ITEM
+// ════════════════════════════════════════════════════════════════════
 function openAddModal() {
   editingItemId = null;
   currentRating = 0; currentStatus = 'planned'; currentCover = null;
   document.getElementById('itemModalTitle').textContent = 'Add Item';
   document.getElementById('itemDeleteBtn').style.display = 'none';
   ['f_title','f_author','f_year','f_genre','f_desc','f_notes'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f_progress').value = '0';
   document.getElementById('coverPreviewImg').style.display = 'none';
   document.getElementById('coverPlaceholder').style.display = 'block';
   populateCategorySelect(null);
@@ -1417,19 +1741,18 @@ function openAddModal() {
 }
 
 function openEditModal(item) {
-  editingItemId = item.id;
-  currentRating = item.rating || 0;
-  currentStatus = item.status || 'planned';
-  currentCover = item.cover || null;
+  editingItemId    = item.id;
+  currentRating    = item.rating || 0;
+  currentStatus    = item.status || 'planned';
+  currentCover     = item.cover || null;
   document.getElementById('itemModalTitle').textContent = 'Edit Item';
   document.getElementById('itemDeleteBtn').style.display = 'block';
-  document.getElementById('f_title').value = item.title || '';
+  document.getElementById('f_title').value  = item.title || '';
   document.getElementById('f_author').value = item.author || '';
-  document.getElementById('f_year').value = item.year || '';
-  document.getElementById('f_genre').value = item.genre || '';
-  document.getElementById('f_desc').value = item.desc || '';
-  document.getElementById('f_notes').value = item.notes || '';
-  document.getElementById('f_progress').value = item.progress || '0';
+  document.getElementById('f_year').value   = item.year || '';
+  document.getElementById('f_genre').value  = item.genre || '';
+  document.getElementById('f_desc').value   = item.desc || '';
+  document.getElementById('f_notes').value  = item.notes || '';
   if (item.cover) {
     document.getElementById('coverPreviewImg').src = item.cover;
     document.getElementById('coverPreviewImg').style.display = 'block';
@@ -1461,36 +1784,36 @@ function saveItem() {
   const title = document.getElementById('f_title').value.trim();
   if (!title) { alert('Please enter a title.'); return; }
   const item = {
-    id: editingItemId || uid(),
+    id:         editingItemId || uid(),
     title,
-    author: document.getElementById('f_author').value.trim(),
-    year: document.getElementById('f_year').value.trim(),
-    genre: document.getElementById('f_genre').value.trim(),
-    desc: document.getElementById('f_desc').value.trim(),
-    notes: document.getElementById('f_notes').value.trim(),
-    progress: Math.min(100, Math.max(0, parseInt(document.getElementById('f_progress').value)||0)),
+    author:     document.getElementById('f_author').value.trim(),
+    year:       document.getElementById('f_year').value.trim(),
+    genre:      document.getElementById('f_genre').value.trim(),
+    desc:       document.getElementById('f_desc').value.trim(),
+    notes:      document.getElementById('f_notes').value.trim(),
     categoryId: document.getElementById('f_category').value || null,
-    status: currentStatus,
-    rating: currentRating,
-    cover: currentCover,
-    dateAdded: editingItemId ? (db.items.find(i => i.id === editingItemId)?.dateAdded || new Date().toISOString()) : new Date().toISOString(),
+    status:     currentStatus,
+    rating:     currentRating,
+    cover:      currentCover,
+    dateAdded:  editingItemId
+      ? (db.items.find(i => i.id === editingItemId)?.dateAdded || new Date().toISOString())
+      : new Date().toISOString(),
   };
   if (editingItemId) db.items = db.items.map(i => i.id === editingItemId ? item : i);
   else db.items.unshift(item);
-  closeItemModal();
-  closeDetail();
-  saveToGitHub();
-  renderAll();
+  closeItemModal(); closeDetail();
+  saveToGitHub(); renderAll();
 }
 
 function deleteItem() {
   if (!confirm('Delete this item permanently?')) return;
   db.items = db.items.filter(i => i.id !== editingItemId);
-  closeItemModal(); closeDetail();
-  saveToGitHub(); renderAll();
+  closeItemModal(); closeDetail(); saveToGitHub(); renderAll();
 }
 
-// ─── Cover upload ─────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  COVER UPLOAD
+// ════════════════════════════════════════════════════════════════════
 function handleCoverUpload(e) {
   const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
@@ -1515,23 +1838,25 @@ function handleCoverUpload(e) {
   e.target.value = '';
 }
 
-// ─── Rating ───────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  RATING / STATUS
+// ════════════════════════════════════════════════════════════════════
 function setRating(n) { currentRating = currentRating === n ? 0 : n; updateStars(); }
 function updateStars() {
-  document.querySelectorAll('.star-input-btn').forEach((btn, i) => { btn.classList.toggle('lit', i < currentRating); });
+  document.querySelectorAll('.star-input-btn').forEach((btn, i) => btn.classList.toggle('lit', i < currentRating));
 }
-
-// ─── Status ───────────────────────────────────────────────────────────
 function selectItemStatus(el) { currentStatus = el.dataset.s; updateStatusPills(); }
 function updateStatusPills() {
-  document.querySelectorAll('.status-pill-btn').forEach(p => { p.classList.toggle('selected', p.dataset.s === currentStatus); });
+  document.querySelectorAll('.status-pill-btn').forEach(p => p.classList.toggle('selected', p.dataset.s === currentStatus));
 }
 
-// ─── Detail view ──────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  DETAIL VIEW
+// ════════════════════════════════════════════════════════════════════
 function openDetail(id) {
   viewingItemId = id;
   const item = db.items.find(i => i.id === id); if (!item) return;
-  const cat = item.categoryId ? db.categories.find(c => c.id === item.categoryId) : null;
+  const cat  = item.categoryId ? db.categories.find(c => c.id === item.categoryId) : null;
   document.getElementById('detailHeaderTitle').textContent = item.title;
   const coverHtml = item.cover
     ? `<img class="detail-cover-img" src="${item.cover}" alt="${esc(item.title)}">`
@@ -1540,14 +1865,13 @@ function openDetail(id) {
     <div class="detail-cover-wrap">${coverHtml}</div>
     ${df('Title', item.title)}
     ${item.author ? df('Author / Director', item.author) : ''}
-    ${item.year ? df('Year', item.year) : ''}
-    ${item.genre ? df('Genre', item.genre) : ''}
-    ${cat ? df('Category', cat.icon + ' ' + cat.name) : ''}
+    ${item.year   ? df('Year', item.year) : ''}
+    ${item.genre  ? df('Genre', item.genre) : ''}
+    ${cat         ? df('Category', cat.icon + ' ' + cat.name) : ''}
     <div class="detail-field"><div class="detail-field-label">Status</div><div class="detail-field-value"><span class="status-chip ${item.status}">${statusLabel(item.status)}</span></div></div>
     <div class="detail-field"><div class="detail-field-label">Rating</div><div class="detail-stars">${item.rating ? starsHtml(item.rating, 20) : '<span style="font-size:13px;color:var(--muted);font-family:var(--font-mono);">Unrated</span>'}</div></div>
-    ${item.progress > 0 && item.progress < 100 ? df('Progress', item.progress + '%') : ''}
-    ${item.desc ? df('Description', item.desc) : ''}
-    ${item.notes ? df('Notes', item.notes) : ''}
+    ${item.desc   ? df('Description', item.desc) : ''}
+    ${item.notes  ? df('Notes', item.notes) : ''}
     <div class="detail-field"><div class="detail-field-label">Added</div><div class="detail-field-value" style="color:var(--muted);font-family:var(--font-mono);font-size:12px;">${new Date(item.dateAdded).toLocaleDateString()}</div></div>
   `;
   document.getElementById('detailScreen').classList.add('show');
@@ -1558,7 +1882,9 @@ function df(label, value) {
 function closeDetail() { document.getElementById('detailScreen').classList.remove('show'); }
 function openEditFromDetail() { const item = db.items.find(i => i.id === viewingItemId); if (item) { closeDetail(); openEditModal(item); } }
 
-// ─── Settings ─────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  SETTINGS
+// ════════════════════════════════════════════════════════════════════
 function openSettings() {
   document.getElementById('tokenInput').value = getToken();
   renderColorSwatches();
@@ -1566,6 +1892,15 @@ function openSettings() {
   document.getElementById('settingsScreen').classList.add('show');
 }
 function closeSettings() { document.getElementById('settingsScreen').classList.remove('show'); }
+
+function changePassword() {
+  if (isGuest) { alert("You're in a guest session. Create a profile to set a password."); return; }
+  const pw = document.getElementById('newPwInput').value;
+  if (!pw) return alert('Enter a new password first.');
+  localStorage.setItem(`mt_pw_${currentProfile.id}`, btoa(pw));
+  document.getElementById('newPwInput').value = '';
+  alert('Password updated on this device!');
+}
 
 const BG_COLORS = [
   { hex: '#0d0d16', name: 'Default' },
@@ -1585,11 +1920,7 @@ function renderColorSwatches() {
     `<div class="color-swatch${c.hex === current ? ' selected' : ''}" style="background:${c.hex}" title="${c.name}" onclick="setBgColor('${c.hex}')">${c.hex === current ? '✓' : ''}</div>`
   ).join('');
 }
-function setBgColor(hex) {
-  localStorage.setItem('mt_bg', hex);
-  applyBgColor();
-  renderColorSwatches();
-}
+function setBgColor(hex) { localStorage.setItem('mt_bg', hex); applyBgColor(); renderColorSwatches(); }
 function applyBgColor() {
   const bg = localStorage.getItem('mt_bg') || '#0d0d16';
   document.documentElement.style.setProperty('--bg', bg);
@@ -1597,10 +1928,10 @@ function applyBgColor() {
 }
 
 function renderSettingsStats() {
-  const total = db.items.length;
+  const total     = db.items.length;
   const completed = db.items.filter(i => i.status === 'completed').length;
-  const rated = db.items.filter(i => i.rating);
-  const avg = rated.length ? (rated.reduce((s,i)=>s+(i.rating||0),0)/rated.length).toFixed(1) : '—';
+  const rated     = db.items.filter(i => i.rating);
+  const avg       = rated.length ? (rated.reduce((s,i) => s+(i.rating||0),0)/rated.length).toFixed(1) : '—';
   document.getElementById('settingsStats').innerHTML = `
     <div class="stats-val-row"><span class="stats-val-key">Total items</span><span>${total}</span></div>
     <div class="stats-val-row"><span class="stats-val-key">Categories</span><span>${db.categories.length}</span></div>
@@ -1611,10 +1942,15 @@ function renderSettingsStats() {
 
 function exportData() {
   const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'mediatracker-backup.json'; a.click();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `mediatracker-${currentProfile ? currentProfile.name : 'backup'}.json`;
+  a.click();
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════════════
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function starsHtml(r, size=11) {
@@ -1623,8 +1959,16 @@ function starsHtml(r, size=11) {
 function statusLabel(s) {
   return s === 'in-progress' ? 'Active' : s === 'completed' ? 'Completed' : 'Planned';
 }
+function getInitials(name) {
+  if (!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+}
 
-// ─── Swipe to open drawer ─────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+//  TOUCH / SWIPE
+// ════════════════════════════════════════════════════════════════════
 let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
 document.addEventListener('touchend', e => {
@@ -1633,11 +1977,15 @@ document.addEventListener('touchend', e => {
   if (dx < -60 && document.getElementById('mobileDrawer').classList.contains('open')) closeDrawer();
 }, { passive: true });
 
-// Close dropdowns on outside click
 document.addEventListener('click', e => {
   if (!e.target.closest('.sort-wrap')) closeSortMenu();
   if (!e.target.closest('.size-wrap')) closeSizeMenu();
 });
+
+// ════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════
+initProfileScreen();
 </script>
 </body>
 </html>
