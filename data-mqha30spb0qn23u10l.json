@@ -1,4 +1,19 @@
 {
   "categories": [],
-  "items": []
+  "items": [
+    {
+      "id": "mqlb85lv38r7ryp5b",
+      "title": "a",
+      "author": "",
+      "year": "",
+      "genre": "",
+      "desc": "",
+      "notes": "",
+      "categoryId": null,
+      "status": "planned",
+      "rating": 0,
+      "cover": null,
+      "dateAdded": "2026-06-19T19:16:36.835Z"
+    }
+  ]
 }
