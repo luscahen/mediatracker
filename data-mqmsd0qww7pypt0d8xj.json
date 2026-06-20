@@ -1,4 +1,10 @@
 {
-  "categories": [],
+  "categories": [
+    {
+      "id": "mqmsdy4ccth95ghl2p",
+      "name": "My books",
+      "icon": "📚"
+    }
+  ],
   "items": []
 }
