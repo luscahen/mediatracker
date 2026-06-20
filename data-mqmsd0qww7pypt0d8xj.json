@@ -6,20 +6,5 @@
       "icon": "📚"
     }
   ],
-  "items": [
-    {
-      "id": "mqmseqygv6qr175eet",
-      "title": "a",
-      "author": "B",
-      "year": "66",
-      "genre": "",
-      "desc": "",
-      "notes": "",
-      "categoryId": "mqmsdy4ccth95ghl2p",
-      "status": "planned",
-      "rating": 5,
-      "cover": null,
-      "dateAdded": "2026-06-20T20:05:24.089Z"
-    }
-  ]
+  "items": []
 }
