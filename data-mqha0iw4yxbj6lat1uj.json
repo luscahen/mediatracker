@@ -1,4 +1,10 @@
 {
-  "categories": [],
+  "categories": [
+    {
+      "id": "mqqstkp9tniaknza99",
+      "name": "Movies",
+      "icon": "🎬"
+    }
+  ],
   "items": []
 }
