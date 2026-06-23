@@ -13,6 +13,20 @@
   ],
   "items": [
     {
+      "id": "mqqv480nwilfju5o92",
+      "title": "O Castelo",
+      "author": "Franz Kafta",
+      "year": "",
+      "genre": "",
+      "desc": "",
+      "notes": "",
+      "categoryId": "mqquvy2pn0uhyp11lmc",
+      "status": "planned",
+      "rating": 0,
+      "cover": null,
+      "dateAdded": "2026-06-23T16:32:16.535Z"
+    },
+    {
       "id": "mqqv339qzg88kg3zh0g",
       "title": "O processo",
       "author": "Franz Kafta",
