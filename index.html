@@ -427,6 +427,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12)}
       <div class="mh-top">
         <div><div class="mh-eyebrow">Media Tracker</div><div class="mh-title" id="mobileTitle">All Media</div></div>
         <div class="mh-actions">
+          <button class="mh-icon-btn" id="mobileBulkBtn" onclick="enterBulkMode()" title="Select multiple items">✓</button>
           <button class="mh-icon-btn" id="mobileSearchBtn" onclick="toggleMobileSearch()">🔍</button>
           <button class="mh-add-btn" onclick="openAddModal()">＋</button>
         </div>
@@ -444,10 +445,10 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12)}
           <button class="mh-filter-pill" data-status="in-progress" onclick="selectStatus(this,'in-progress')">Active</button>
           <button class="mh-filter-pill" data-status="planned" onclick="selectStatus(this,'planned')">Planned</button>
           <button class="mh-menu-btn" id="mobileColsBtn" onclick="toggleSizeMenu('mobile')">⊞</button>
-          <div class="mh-view-toggle">
-            <button class="mh-view-btn active" id="mobileGridBtn" onclick="setView('grid')">⊞</button>
-            <button class="mh-view-btn" id="mobileListBtn" onclick="setView('list')">☰</button>
-          </div>
+        </div>
+        <div style="position:absolute;top:10px;right:16px;display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2px;z-index:10;">
+          <button class="mh-view-btn active" id="mobileGridBtn" onclick="setView('grid')">⊞</button>
+          <button class="mh-view-btn" id="mobileListBtn" onclick="setView('list')">☰</button>
         </div>
         <div class="size-dropdown" id="sizeDropdownMobile" style="position:absolute;top:100%;right:16px;z-index:51;">
           <button class="size-option" data-cols="2" onclick="setGridCols(2)">2 columns</button>
@@ -505,7 +506,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12)}
       </div>
     </div>
 
-    <div id="bulkBar" style="display:none;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;">
+    <div id="bulkBar" style="display:none;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);flex-direction:row;align-items:center;justify-content:space-between;">
       <div style="font-size:13px;color:var(--foreground);"><span id="bulkCount">0</span> selected</div>
       <div style="display:flex;gap:8px;">
         <button class="settings-action-btn" onclick="bulkMove()">Move</button>
@@ -820,11 +821,11 @@ function buildProfileDropdown(elId){
   const el = document.getElementById(elId);
   if(!el) return;
   el.innerHTML = profiles.map(p=>`
-    <div style="display:flex;align-items:center;gap:4px;">
-      <button class="profile-opt${p.id===currentProfileId?' active':''}" style="flex:1;text-align:left;" onclick="switchProfile('${p.id}')">
-        <span class="profile-avatar-sm">${getInitials(p.name)}</span> ${esc(p.name)}
+    <div style="display:flex;align-items:center;gap:6px;padding:8px 9px;border-radius:8px;font-size:12px;color:var(--muted);">
+      <button style="flex:1;text-align:left;background:none;border:none;color:inherit;cursor:pointer;padding:0;font-size:12px;display:flex;align-items:center;gap:8px;" onclick="switchProfile('${p.id}')">
+        <span class="profile-avatar-sm">${getInitials(p.name)}</span> <span>${esc(p.name)}</span>
       </button>
-      ${p.id!==currentProfileId?`<button class="nav-delete-btn" style="margin:0;" onclick="event.stopPropagation();deleteProfile('${p.id}')">✕</button>`:''}</div>`).join('') + `<button class="profile-new-btn" onclick="openProfileModal()">＋ New profile</button>`;
+      ${p.id!==currentProfileId?`<button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:4px;" onclick="event.stopPropagation();deleteProfile('${p.id}')" title="Delete">✕</button>`:''}</div>`).join('') + `<button class="profile-new-btn" onclick="openProfileModal()">＋ New profile</button>`;
 }
 
 function toggleProfileDropdown(which){
@@ -1040,6 +1041,7 @@ function bulkMove(){
 }
 
 function renderGrid(){
+  document.getElementById('bulkBar').style.display='none';  // Always hide bulk bar when re-rendering
   const container = document.getElementById('gridContainer');
   let title='All Media';
   if(activeTab==='stats') title='Statistics';
