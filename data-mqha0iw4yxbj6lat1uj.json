@@ -1,14 +1,14 @@
 {
   "categories": [
     {
-      "id": "mqsbscdgkz4lntn5vv",
-      "name": "Books",
-      "icon": "📚"
-    },
-    {
       "id": "mqtvf4ta87mwf1znly3",
       "name": "Animes",
       "icon": "🎌"
+    },
+    {
+      "id": "mqsbscdgkz4lntn5vv",
+      "name": "Books",
+      "icon": "📚"
     }
   ],
   "items": [
