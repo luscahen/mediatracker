@@ -445,10 +445,10 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12)}
           <button class="mh-filter-pill" data-status="in-progress" onclick="selectStatus(this,'in-progress')">Active</button>
           <button class="mh-filter-pill" data-status="planned" onclick="selectStatus(this,'planned')">Planned</button>
           <button class="mh-menu-btn" id="mobileColsBtn" onclick="toggleSizeMenu('mobile')">⊞</button>
-        </div>
-        <div style="position:absolute;top:10px;right:16px;display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2px;z-index:10;">
-          <button class="mh-view-btn active" id="mobileGridBtn" onclick="setView('grid')">⊞</button>
-          <button class="mh-view-btn" id="mobileListBtn" onclick="setView('list')">☰</button>
+          <div style="margin-left:auto;flex-shrink:0;display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2px;">
+            <button class="mh-view-btn active" id="mobileGridBtn" onclick="setView('grid')">⊞</button>
+            <button class="mh-view-btn" id="mobileListBtn" onclick="setView('list')">☰</button>
+          </div>
         </div>
         <div class="size-dropdown" id="sizeDropdownMobile" style="position:absolute;top:100%;right:16px;z-index:51;">
           <button class="size-option" data-cols="2" onclick="setGridCols(2)">2 columns</button>
@@ -997,8 +997,16 @@ function renderSidebar(){
 
 // ── Bulk selection ───────────────────────────────────────────────────
 function enterBulkMode(){
-  if(selectedItems.size===0){
-    document.getElementById('gridContainer').parentElement.classList.add('bulk-select-mode');
+  const container = document.getElementById('gridContainer').parentElement;
+  const isInBulkMode = container.classList.contains('bulk-select-mode');
+  
+  if(isInBulkMode){
+    // Exit bulk mode
+    clearSelection();
+  } else {
+    // Enter bulk mode
+    container.classList.add('bulk-select-mode');
+    updateBulkBar();
   }
 }
 function toggleItemSelection(itemId){
