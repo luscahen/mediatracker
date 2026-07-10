@@ -13,6 +13,20 @@
   ],
   "items": [
     {
+      "id": "mrffx7mgzb3v9t6kqxa",
+      "title": "Cowboy Bebop",
+      "author": "",
+      "year": "",
+      "genre": "",
+      "desc": "",
+      "notes": "",
+      "categoryId": "mqtvf4ta87mwf1znly3",
+      "status": "completed",
+      "rating": 5,
+      "cover": null,
+      "dateAdded": "2026-07-10T21:21:09.592Z"
+    },
+    {
       "id": "mrffwwd0bzsnm63x5n",
       "title": "Bleach",
       "author": "",
