@@ -1000,21 +1000,20 @@ function renderSidebar(){
 
 // ── Bulk selection ───────────────────────────────────────────────────
 function enterBulkMode(){
-  const gridContainer = document.getElementById('gridContainer');
-  if(!gridContainer) { console.warn('gridContainer not found'); return; }
+  const contentArea = document.getElementById('contentArea');
+  if(!contentArea) { console.error('contentArea not found'); return; }
   
-  const container = gridContainer.parentElement;
-  if(!container) { console.warn('gridContainer parent not found'); return; }
-  
-  const isInBulkMode = container.classList.contains('bulk-select-mode');
+  const isInBulkMode = contentArea.classList.contains('bulk-select-mode');
+  console.log('enterBulkMode: isInBulkMode=', isInBulkMode);
   
   if(isInBulkMode){
     // Exit bulk mode
     clearSelection();
   } else {
     // Enter bulk mode
-    container.classList.add('bulk-select-mode');
+    contentArea.classList.add('bulk-select-mode');
     updateBulkBar();
+    console.log('bulk mode entered');
   }
 }
 function toggleItemSelection(itemId){
@@ -1022,13 +1021,15 @@ function toggleItemSelection(itemId){
   else selectedItems.add(itemId);
   updateBulkBar();
   if(selectedItems.size===0){
-    document.getElementById('gridContainer').parentElement.classList.remove('bulk-select-mode');
+    const contentArea = document.getElementById('contentArea');
+    if(contentArea) contentArea.classList.remove('bulk-select-mode');
   }
   document.querySelectorAll(`[data-item-id="${itemId}"]`).forEach(el=>el.classList.toggle('selected'));
 }
 function clearSelection(){
   selectedItems.clear();
-  document.getElementById('gridContainer').parentElement.classList.remove('bulk-select-mode');
+  const contentArea = document.getElementById('contentArea');
+  if(contentArea) contentArea.classList.remove('bulk-select-mode');
   document.getElementById('bulkBar').style.display='none';
   renderGrid();
 }
@@ -1460,8 +1461,13 @@ document.addEventListener('touchend', e=>{
 }, {passive:true});
 
 document.addEventListener('click', e=>{
+  // Close dropdowns if clicked outside them
   if(!e.target.closest('.sort-wrap')) closeSortMenu();
   if(!e.target.closest('.size-wrap')) closeSizeMenu();
+  if(!e.target.closest('#mobileColsBtn') && !e.target.closest('#sizeDropdownMobile')){
+    const mobile = document.getElementById('sizeDropdownMobile');
+    if(mobile) mobile.style.display='none';
+  }
   if(!e.target.closest('.profile-box')) closeProfileDropdown();
 });
 
