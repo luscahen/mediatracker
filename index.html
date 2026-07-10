@@ -150,7 +150,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12)}
 .mh-search-bar input:focus{border-color:rgba(124,106,255,.4)}
 .mh-search-rel{position:relative}
 .mh-search-rel .search-icon{left:10px}
-.mh-filters{display:flex;align-items:center;gap:8px;padding:0 16px 10px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border)}
+.mh-filters{display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;flex:1;}
 .mh-filters::-webkit-scrollbar{display:none}
 .mh-menu-btn{flex-shrink:0;width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);font-size:14px;color:var(--muted)}
 .mh-filter-pill{flex-shrink:0;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:500;border:1px solid var(--border);color:var(--muted);background:transparent}
@@ -437,20 +437,22 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12)}
           <input id="mobileSearchInput" type="search" placeholder="Search your library..." oninput="renderGrid()">
         </div>
       </div>
-      <div style="position:relative;">
-        <div class="mh-filters">
-          <button class="mh-menu-btn" onclick="openDrawer()">☰</button>
+      <div style="display:flex;align-items:center;gap:8px;padding:0 16px 10px;border-bottom:1px solid var(--border);">
+        <button class="mh-menu-btn" onclick="openDrawer()">☰</button>
+        <div class="mh-filters" style="flex:1;overflow-x:auto;">
           <button class="mh-filter-pill active" data-status="all" onclick="selectStatus(this,'all')">All</button>
           <button class="mh-filter-pill" data-status="completed" onclick="selectStatus(this,'completed')">Completed</button>
           <button class="mh-filter-pill" data-status="in-progress" onclick="selectStatus(this,'in-progress')">Active</button>
           <button class="mh-filter-pill" data-status="planned" onclick="selectStatus(this,'planned')">Planned</button>
-          <button class="mh-menu-btn" id="mobileColsBtn" onclick="toggleSizeMenu('mobile')">⊞</button>
-          <div style="margin-left:auto;flex-shrink:0;display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2px;">
-            <button class="mh-view-btn active" id="mobileGridBtn" onclick="setView('grid')">⊞</button>
-            <button class="mh-view-btn" id="mobileListBtn" onclick="setView('list')">☰</button>
-          </div>
         </div>
-        <div class="size-dropdown" id="sizeDropdownMobile" style="position:absolute;top:100%;right:16px;z-index:51;">
+        <button class="mh-menu-btn" id="mobileColsBtn" onclick="toggleSizeMenu('mobile')">⊞</button>
+        <div style="display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2px;flex-shrink:0;">
+          <button class="mh-view-btn active" id="mobileGridBtn" onclick="setView('grid')">⊞</button>
+          <button class="mh-view-btn" id="mobileListBtn" onclick="setView('list')">☰</button>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <div class="size-dropdown" id="sizeDropdownMobile" style="position:absolute;top:0;right:16px;z-index:51;">
           <button class="size-option" data-cols="2" onclick="setGridCols(2)">2 columns</button>
           <button class="size-option active" data-cols="3" onclick="setGridCols(3)">3 columns</button>
           <button class="size-option" data-cols="4" onclick="setGridCols(4)">4 columns</button>
@@ -997,7 +999,12 @@ function renderSidebar(){
 
 // ── Bulk selection ───────────────────────────────────────────────────
 function enterBulkMode(){
-  const container = document.getElementById('gridContainer').parentElement;
+  const gridContainer = document.getElementById('gridContainer');
+  if(!gridContainer) { console.warn('gridContainer not found'); return; }
+  
+  const container = gridContainer.parentElement;
+  if(!container) { console.warn('gridContainer parent not found'); return; }
+  
   const isInBulkMode = container.classList.contains('bulk-select-mode');
   
   if(isInBulkMode){
