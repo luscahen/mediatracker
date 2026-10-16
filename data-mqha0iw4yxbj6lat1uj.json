@@ -13,6 +13,20 @@
   ],
   "items": [
     {
+      "id": "mvb0fxfo2gh5r578igu",
+      "title": "test",
+      "author": "",
+      "year": "",
+      "genre": "",
+      "desc": "",
+      "notes": "",
+      "categoryId": null,
+      "status": "planned",
+      "rating": 0,
+      "cover": null,
+      "dateAdded": "2026-10-16T13:35:33.638Z"
+    },
+    {
       "id": "mrxgzstlosvw0qxgw6h",
       "title": "A arte de ter razão",
       "author": "schopenhauer",
